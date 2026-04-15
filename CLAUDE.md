@@ -116,10 +116,11 @@ dotnet format src/AppLog.sln
 
 ## Key Implementation Details
 
-### Serial Port Configuration (Default)
-- Baud Rate: 115200
+### Serial Port Configuration
+- Baud Rate: Selectable (9600, 19200, 38400, 57600, **115200** (default), 230400, 460800, 921600)
 - Data Bits: 8, Parity: None, Stop Bits: One
 - Read/Write Timeout: 500ms
+- ComboBox disabled (grayed out) when port is open
 
 ### Log Format
 ```
@@ -136,6 +137,7 @@ dotnet format src/AppLog.sln
 | Control | Type | Function |
 |---------|------|----------|
 | `cmbPort` | ComboBox | Select COM port |
+| `cmbBaudRate` | ComboBox | Select baud rate (default: 115200), disabled when port open |
 | `btnUpdatePort` | Button | Refresh port list |
 | `btnOpenClose` | Button | Toggle Open/Close port |
 | `rtbLogDisplay` | RichTextBox | Display color-coded log (max 1MB buffer) |
@@ -144,7 +146,7 @@ dotnet format src/AppLog.sln
 | `txtSendData` | TextBox | Input ASCII data (Enter to send) |
 | `btnSend` | Button | Send data through UART |
 | `btnStartStopLog` | Button | Toggle Start/Stop file logging |
-| `lblStatus` | Label | Status bar (Connected/Disconnected, Logging) |
+| `lblStatus` | Label | Status bar (Connected/Disconnected, Baud rate, Logging) |
 
 ---
 

@@ -50,13 +50,15 @@ AppLog is a Windows desktop application built with C# .NET 8 WinForms, designed 
 
 **UI Elements:**
 - `ComboBox cmbPort` - Dropdown to select COM port
+- `ComboBox cmbBaudRate` - Dropdown to select baud rate (default: 115200)
 - `Button btnUpdatePort` - "Update Port" button
 
 **Behavior:**
-- App startup → automatically load port list
+- App startup → automatically load port list, default baud rate = 115200
 - Press "Update Port" → refresh list from `SerialPort.GetPortNames()`
-- When port is Open → ComboBox and btnUpdatePort are disabled (grayed out)
-- When port is Closed → ComboBox and btnUpdatePort are enabled
+- Baud rate options: 9600, 19200, 38400, 57600, 115200 (default), 230400, 460800, 921600
+- When port is Open → ComboBox, cmbBaudRate and btnUpdatePort are disabled (grayed out)
+- When port is Closed → ComboBox, cmbBaudRate and btnUpdatePort are enabled
 
 **Acceptance Criteria:**
 - [ ] ComboBox displays correct list of COM ports
@@ -84,20 +86,23 @@ AppLog is a Windows desktop application built with C# .NET 8 WinForms, designed 
 
 **Behavior:**
 - Press "Open":
-  1. Open serial port with config: 115200 baud, 8 data bits, no parity, 1 stop bit
+  1. Open serial port with selected baud rate from `cmbBaudRate`, 8 data bits, no parity, 1 stop bit
   2. Button text → "Close"
   3. ComboBox `cmbPort` → `Enabled = false`
-  4. Button `btnUpdatePort` → `Enabled = false`
-  5. Button `btnSend` → `Enabled = true`
-  6. Start receiving data from UART
+  4. ComboBox `cmbBaudRate` → `Enabled = false` (grayed out)
+  5. Button `btnUpdatePort` → `Enabled = false`
+  6. Button `btnSend` → `Enabled = true`
+  7. Status bar shows baud rate
+  8. Start receiving data from UART
 
 - Press "Close":
   1. Close serial port
   2. Button text → "Open"
   3. ComboBox `cmbPort` → `Enabled = true`
-  4. Button `btnUpdatePort` → `Enabled = true`
-  5. Button `btnSend` → `Enabled = false`
-  6. Stop receiving data
+  4. ComboBox `cmbBaudRate` → `Enabled = true`
+  5. Button `btnUpdatePort` → `Enabled = true`
+  6. Button `btnSend` → `Enabled = false`
+  7. Stop receiving data
 
 **Acceptance Criteria:**
 - [ ] Toggle Open/Close works correctly
@@ -304,7 +309,8 @@ Folder:    logs/ (relative to app executable)
 ├─────────────────────────────────────────────────────────────┤
 │  ┌─────────────────────────────────────────────────────┐    │
 │  │ Port Config                                         │    │
-│  │  [ComboBox: COM Port ▼]  [Update Port]  [Open]      │    │
+│  │  [ComboBox: COM Port ▼] [ComboBox: Baud ▼]          │    │
+│  │  [Update Port]  [Open]                              │    │
 │  └─────────────────────────────────────────────────────┘    │
 │                                                             │
 │  ┌─────────────────────────────────────────────────────┐    │
@@ -329,7 +335,7 @@ Folder:    logs/ (relative to app executable)
 │  └─────────────────────────────────────────────────────┘    │
 │                                                             │
 │  ├─────────────────────────────────────────────────────────┤  │
-│  │ ● Disconnected | COM - | Not logging                   │  │
+│  │ ● Disconnected | COM - | Baud - | Not logging           │  │
 │  └─────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -369,11 +375,11 @@ Folder:    logs/ (relative to app executable)
 
 ## 6. Serial Port Configuration
 
-### Default Configuration
+### Configuration
 
-| Parameter | Default Value | Note |
-|-----------|--------------|------|
-| Baud Rate | 115200 | Common for embedded debugging |
+| Parameter | Value | Note |
+|-----------|-------|------|
+| Baud Rate | Selectable: 9600, 19200, 38400, 57600, **115200** (default), 230400, 460800, 921600 | ComboBox `cmbBaudRate`, disabled when port open |
 | Data Bits | 8 | Standard |
 | Parity | None | Standard |
 | Stop Bits | One | Standard |
@@ -402,7 +408,6 @@ Folder:    logs/ (relative to app executable)
 
 | Feature | Description | Priority |
 |---------|--------|----------|
-| Baud rate selection | Dropdown to select baud rate | P1 |
 | HEX display mode | Display data in HEX format | P1 |
 | HEX send mode | Send data in HEX format | P1 |
 | Auto-reconnect | Auto reconnect when port reconnects | P2 |
