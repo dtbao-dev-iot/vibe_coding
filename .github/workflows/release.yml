@@ -1,0 +1,91 @@
+# =============================================================================
+# AppLog - Release Pipeline
+# =============================================================================
+# Trigger: push tag v* (e.g., v1.0.0)
+# Steps: build → publish → create GitHub Release → upload artifact
+# =============================================================================
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & Release
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/AppLog.sln
+
+      - name: Build
+        run: dotnet build src/AppLog.sln --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test src/AppLog.sln --configuration Release --no-build --verbosity normal
+
+      - name: Publish application
+        run: |
+          dotnet publish src/AppLog/AppLog.csproj \
+            --configuration Release \
+            --runtime win-x64 \
+            --self-contained true \
+            --output ./publish \
+            -p:PublishSingleFile=true \
+            -p:IncludeNativeLibrariesForSelfExtract=true \
+            -p:PublishTrimmed=false
+
+      - name: Get version from tag
+        id: get_version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v*}" >> $GITHUB_OUTPUT
+
+      - name: Create release artifact
+        shell: pwsh
+        run: |
+          $version = "${{ steps.get_version.outputs.VERSION }}"
+          $zipName = "AppLog_v${version}.zip"
+          Compress-Archive -Path ./publish/* -DestinationPath $zipName
+          Write-Host "Created artifact: $zipName"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "AppLog v${{ steps.get_version.outputs.VERSION }}"
+          body: |
+            ## AppLog v${{ steps.get_version.outputs.VERSION }}
+
+            ### Changes
+            - See [CHANGELOG](docs/changelog-template.md) for details.
+
+            ### Download
+            - Download `AppLog_v${{ steps.get_version.outputs.VERSION }}.zip`
+            - Extract and run `AppLog.exe`
+            - Requires Windows 10/11 (x64)
+
+            ### How to use
+            1. Connect UART device via USB
+            2. Select COM port from dropdown
+            3. Click "Open" to connect
+            4. View real-time TX/RX log
+            5. Optionally save log to file
+          draft: false
+          prerelease: ${{ contains(steps.get_version.outputs.VERSION, '-') }}
+          files: |
+            AppLog_v${{ steps.get_version.outputs.VERSION }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

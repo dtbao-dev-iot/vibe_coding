@@ -1,0 +1,46 @@
+# =============================================================================
+# AppLog - Continuous Integration Pipeline
+# =============================================================================
+# Trigger: push to main/develop, PR to main
+# Steps: restore → build → test → lint (format check)
+# =============================================================================
+
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore src/AppLog.sln
+
+      - name: Build
+        run: dotnet build src/AppLog.sln --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test src/AppLog.sln --configuration Release --no-build --verbosity normal
+
+      - name: Format check
+        run: dotnet format src/AppLog.sln --verify-no-changes --verbosity diagnostic
