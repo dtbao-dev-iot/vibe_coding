@@ -1,0 +1,56 @@
+# =============================================================================
+# AppLog - Pre-commit Configuration
+# =============================================================================
+# Install: pip install pre-commit && pre-commit install
+# Run all:  pre-commit run --all-files
+# =============================================================================
+
+repos:
+  # -----------------------------------------------------------------------------
+  # General file checks
+  # -----------------------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # Trim trailing whitespace
+      - id: trailing-whitespace
+        args: [--fix]
+        exclude: '\.md$'
+      # Ensure newline at end of file
+      - id: end-of-file-fixer
+        exclude: '\.md$'
+      # Check YAML files are valid
+      - id: check-yaml
+      # Check JSON files are valid
+      - id: check-json
+      # Check for merge conflict markers
+      - id: check-merge-conflict
+      # Check for large files (limit: 500KB)
+      - id: check-added-large-files
+        args: ['--maxkb=500']
+      # Check that TOML files are valid
+      - id: check-toml
+      # Prevent commit to main/master
+      - id: no-commit-to-branch
+        args: ['--branch', 'main', '--branch', 'master']
+
+  # -----------------------------------------------------------------------------
+  # C# / .NET formatting
+  # -----------------------------------------------------------------------------
+  - repo: local
+    hooks:
+      # Run dotnet format for C# files
+      - id: dotnet-format
+        name: dotnet format
+        entry: dotnet format whitespace --include
+        language: system
+        types: [c#]
+        pass_filenames: true
+
+      # Check commit message follows Conventional Commits
+      - id: commit-msg-check
+        name: Check commit message (Conventional Commits)
+        entry: python scripts/commit-msg-check.py
+        language: python
+        stages: [commit-msg]
+        pass_filenames: false
