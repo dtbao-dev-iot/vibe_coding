@@ -34,6 +34,7 @@ partial class MainForm
         // Port Config Group
         grpPortConfig = new GroupBox();
         cmbPort = new ComboBox();
+        cmbBaudRate = new ComboBox();
         btnUpdatePort = new Button();
         btnOpenClose = new Button();
 
@@ -63,22 +64,28 @@ partial class MainForm
         grpPortConfig.Size = new System.Drawing.Size(560, 60);
 
         cmbPort.Location = new System.Drawing.Point(10, 25);
-        cmbPort.Size = new System.Drawing.Size(150, 23);
+        cmbPort.Size = new System.Drawing.Size(120, 23);
         cmbPort.DropDownStyle = ComboBoxStyle.DropDownList;
 
-        btnUpdatePort.Location = new System.Drawing.Point(170, 24);
+        cmbBaudRate.Location = new System.Drawing.Point(140, 25);
+        cmbBaudRate.Size = new System.Drawing.Size(90, 23);
+        cmbBaudRate.DropDownStyle = ComboBoxStyle.DropDownList;
+        cmbBaudRate.Items.AddRange(new object[] { "9600", "19200", "38400", "57600", "115200", "230400", "460800", "921600" });
+        cmbBaudRate.SelectedIndex = 4; // Default: 115200
+
+        btnUpdatePort.Location = new System.Drawing.Point(240, 24);
         btnUpdatePort.Size = new System.Drawing.Size(100, 26);
         btnUpdatePort.Text = "Update Port";
         btnUpdatePort.UseVisualStyleBackColor = true;
         btnUpdatePort.Click += btnUpdatePort_Click;
 
-        btnOpenClose.Location = new System.Drawing.Point(280, 24);
+        btnOpenClose.Location = new System.Drawing.Point(350, 24);
         btnOpenClose.Size = new System.Drawing.Size(100, 26);
         btnOpenClose.Text = "Open";
         btnOpenClose.UseVisualStyleBackColor = true;
         btnOpenClose.Click += btnOpenClose_Click;
 
-        grpPortConfig.Controls.AddRange(new Control[] { cmbPort, btnUpdatePort, btnOpenClose });
+        grpPortConfig.Controls.AddRange(new Control[] { cmbPort, cmbBaudRate, btnUpdatePort, btnOpenClose });
 
         // =========================================================================
         // GroupBox: Log Display
@@ -195,6 +202,11 @@ partial class MainForm
     /// Button to refresh the COM port list.
     /// </summary>
     private Button btnUpdatePort;
+
+    /// <summary>
+    /// ComboBox for selecting baud rate.
+    /// </summary>
+    private ComboBox cmbBaudRate;
 
     /// <summary>
     /// Button to toggle Open/Close serial port.

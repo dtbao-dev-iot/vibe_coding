@@ -115,10 +115,11 @@ public partial class MainForm : Form
         }
 
         string portName = cmbPort.SelectedItem.ToString()!;
+        int baudRate = GetSelectedBaudRate();
 
         try
         {
-            _serialPortService.OpenPort(portName);
+            _serialPortService.OpenPort(portName, baudRate);
             UpdateUIState(isPortOpen: true);
             UpdateStatusBar();
         }
@@ -127,6 +128,20 @@ public partial class MainForm : Form
             MessageBox.Show($"Failed to open {portName}:\n{ex.Message}", "Error",
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    /// <summary>
+    /// Gets the selected baud rate from the ComboBox.
+    /// </summary>
+    /// <returns>The selected baud rate value.</returns>
+    private int GetSelectedBaudRate()
+    {
+        if (cmbBaudRate.SelectedItem == null)
+        {
+            return 115200;
+        }
+
+        return int.TryParse(cmbBaudRate.SelectedItem.ToString(), out int baudRate) ? baudRate : 115200;
     }
 
     /// <summary>
@@ -322,11 +337,13 @@ public partial class MainForm : Form
 
     /// <summary>
     /// Updates UI controls based on port open/close state.
+    /// Disables port config controls (including baud rate) when port is open.
     /// </summary>
     /// <param name="isPortOpen">Whether the serial port is open.</param>
     private void UpdateUIState(bool isPortOpen)
     {
         cmbPort.Enabled = !isPortOpen;
+        cmbBaudRate.Enabled = !isPortOpen;
         btnUpdatePort.Enabled = !isPortOpen;
         btnOpenClose.Text = isPortOpen ? "Close" : "Open";
         btnSend.Enabled = isPortOpen;
@@ -342,15 +359,16 @@ public partial class MainForm : Form
     }
 
     /// <summary>
-    /// Updates the status bar with current connection and logging state.
+    /// Updates the status bar with current connection, baud rate, and logging state.
     /// </summary>
     private void UpdateStatusBar()
     {
         string connectionStatus = _serialPortService.IsOpen ? "Connected" : "Disconnected";
         string portInfo = _serialPortService.IsOpen ? _serialPortService.PortName : "-";
+        string baudInfo = _serialPortService.IsOpen ? _serialPortService.BaudRate.ToString() : "-";
         string loggingStatus = _logFileService.IsLogging ? "Logging" : "Not logging";
 
-        lblStatus.Text = $"● {connectionStatus} | COM {portInfo} | {loggingStatus}";
+        lblStatus.Text = $"● {connectionStatus} | COM {portInfo} | Baud {baudInfo} | {loggingStatus}";
         lblStatus.ForeColor = _serialPortService.IsOpen ? Color.Green : Color.Red;
     }
 

@@ -59,13 +59,19 @@ public class SerialPortService : IDisposable
     }
 
     /// <summary>
-    /// Opens the specified serial port with default configuration.
-    /// Configuration: 115200 baud, 8 data bits, no parity, 1 stop bit.
+    /// Gets the current baud rate of the serial port.
+    /// </summary>
+    public int BaudRate => _serialPort?.BaudRate ?? 0;
+
+    /// <summary>
+    /// Opens the specified serial port with the given baud rate.
+    /// Configuration: custom baud rate, 8 data bits, no parity, 1 stop bit.
     /// </summary>
     /// <param name="portName">The name of the COM port to open (e.g., "COM3").</param>
+    /// <param name="baudRate">The baud rate for serial communication. Defaults to 115200.</param>
     /// <exception cref="InvalidOperationException">Thrown when a port is already open.</exception>
     /// <exception cref="ArgumentException">Thrown when portName is null or empty.</exception>
-    public void OpenPort(string portName)
+    public void OpenPort(string portName, int baudRate = DefaultBaudRate)
     {
         if (string.IsNullOrWhiteSpace(portName))
         {
@@ -79,7 +85,7 @@ public class SerialPortService : IDisposable
 
         _serialPort = new SerialPort(portName)
         {
-            BaudRate = DefaultBaudRate,
+            BaudRate = baudRate,
             DataBits = 8,
             Parity = Parity.None,
             StopBits = StopBits.One,
