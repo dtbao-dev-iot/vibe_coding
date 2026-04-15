@@ -38,7 +38,13 @@ jobs:
       - name: Run tests
         run: dotnet test src/AppLog.sln --configuration Release --no-build --verbosity normal
 
+      - name: Get version from tag
+        id: get_version
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
       - name: Publish application
+        shell: bash
         run: |
           dotnet publish src/AppLog/AppLog.csproj \
             --configuration Release \
@@ -48,11 +54,6 @@ jobs:
             -p:PublishSingleFile=true \
             -p:IncludeNativeLibrariesForSelfExtract=true \
             -p:PublishTrimmed=false
-
-      - name: Get version from tag
-        id: get_version
-        shell: bash
-        run: echo "VERSION=${GITHUB_REF#refs/tags/v*}" >> $GITHUB_OUTPUT
 
       - name: Create release artifact
         shell: pwsh
@@ -70,7 +71,7 @@ jobs:
             ## AppLog v${{ steps.get_version.outputs.VERSION }}
 
             ### Changes
-            - See [CHANGELOG](docs/changelog-template.md) for details.
+            - See [CHANGELOG](docs/CHANGELOG/CHANGELOG-${{ steps.get_version.outputs.VERSION }}.md) for details.
 
             ### Download
             - Download `AppLog_v${{ steps.get_version.outputs.VERSION }}.zip`
