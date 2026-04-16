@@ -312,6 +312,7 @@ public partial class MainForm : Form
     /// <summary>
     /// Handles the ErrorOccurred event from the serial port service.
     /// Invokes error display on the main thread.
+    /// Detects unexpected disconnection and auto-recovers UI.
     /// </summary>
     private void SerialPortService_ErrorOccurred(object? sender, string errorMessage)
     {
@@ -329,6 +330,47 @@ public partial class MainForm : Form
             Data = $"[ERROR] {errorMessage}"
         };
         LogDisplayHelper.AppendLogEntry(rtbLogDisplay, errorEntry);
+
+        // Handle unexpected disconnection (USB unplugged, device removed)
+        if (_serialPortService.IsOpen)
+        {
+            try
+            {
+                // Test if port is still accessible
+                _ = _serialPortService.PortName;
+            }
+            catch
+            {
+                HandlePortDisconnected();
+                return;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Handles unexpected serial port disconnection.
+    /// Closes the port safely, re-enables UI, and notifies the user.
+    /// </summary>
+    private void HandlePortDisconnected()
+    {
+        try
+        {
+            _serialPortService.ClosePort();
+        }
+        catch
+        {
+            // Suppress close errors during unexpected disconnect
+        }
+
+        UpdateUIState(isPortOpen: false);
+        UpdateStatusBar();
+        RefreshPortList();
+
+        MessageBox.Show(
+            "Serial port has been disconnected unexpectedly.\nPlease reconnect the device and re-open the port.",
+            "Port Disconnected",
+            MessageBoxButtons.OK,
+            MessageBoxIcon.Warning);
     }
 
     // =========================================================================

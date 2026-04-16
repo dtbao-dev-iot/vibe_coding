@@ -62,6 +62,7 @@ partial class MainForm
         grpPortConfig.Text = "Port Config";
         grpPortConfig.Location = new System.Drawing.Point(12, 12);
         grpPortConfig.Size = new System.Drawing.Size(560, 60);
+        grpPortConfig.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
 
         cmbPort.Location = new System.Drawing.Point(10, 25);
         cmbPort.Size = new System.Drawing.Size(120, 23);
@@ -93,6 +94,7 @@ partial class MainForm
         grpLogDisplay.Text = "Log Display";
         grpLogDisplay.Location = new System.Drawing.Point(12, 80);
         grpLogDisplay.Size = new System.Drawing.Size(560, 300);
+        grpLogDisplay.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
         rtbLogDisplay.Location = new System.Drawing.Point(10, 20);
         rtbLogDisplay.Size = new System.Drawing.Size(540, 240);
@@ -100,17 +102,20 @@ partial class MainForm
         rtbLogDisplay.BackColor = System.Drawing.Color.White;
         rtbLogDisplay.Font = new System.Drawing.Font("Consolas", 9F);
         rtbLogDisplay.WordWrap = false;
+        rtbLogDisplay.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
         btnClearLog.Location = new System.Drawing.Point(370, 266);
         btnClearLog.Size = new System.Drawing.Size(85, 26);
         btnClearLog.Text = "Clear";
         btnClearLog.UseVisualStyleBackColor = true;
+        btnClearLog.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnClearLog.Click += btnClearLog_Click;
 
         btnCopyLog.Location = new System.Drawing.Point(465, 266);
         btnCopyLog.Size = new System.Drawing.Size(85, 26);
         btnCopyLog.Text = "Copy";
         btnCopyLog.UseVisualStyleBackColor = true;
+        btnCopyLog.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnCopyLog.Click += btnCopyLog_Click;
 
         grpLogDisplay.Controls.AddRange(new Control[] { rtbLogDisplay, btnClearLog, btnCopyLog });
@@ -121,14 +126,17 @@ partial class MainForm
         grpSendData.Text = "Send Data";
         grpSendData.Location = new System.Drawing.Point(12, 388);
         grpSendData.Size = new System.Drawing.Size(560, 60);
+        grpSendData.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
         txtSendData.Location = new System.Drawing.Point(10, 25);
         txtSendData.Size = new System.Drawing.Size(430, 23);
+        txtSendData.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         txtSendData.KeyDown += txtSendData_KeyDown;
 
         btnSend.Location = new System.Drawing.Point(450, 24);
         btnSend.Size = new System.Drawing.Size(100, 26);
         btnSend.Text = "Send";
+        btnSend.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnSend.UseVisualStyleBackColor = true;
         btnSend.Enabled = false;
         btnSend.Click += btnSend_Click;
@@ -141,6 +149,7 @@ partial class MainForm
         grpLogFile.Text = "Log File";
         grpLogFile.Location = new System.Drawing.Point(12, 456);
         grpLogFile.Size = new System.Drawing.Size(560, 55);
+        grpLogFile.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
 
         btnStartStopLog.Location = new System.Drawing.Point(10, 20);
         btnStartStopLog.Size = new System.Drawing.Size(100, 26);
@@ -155,6 +164,7 @@ partial class MainForm
         // =========================================================================
         lblStatus.Location = new System.Drawing.Point(0, 520);
         lblStatus.Size = new System.Drawing.Size(584, 25);
+        lblStatus.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         lblStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
         lblStatus.Text = "● Disconnected | COM - | Not logging";
         lblStatus.ForeColor = System.Drawing.Color.Red;
