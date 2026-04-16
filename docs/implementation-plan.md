@@ -33,8 +33,8 @@ The Implementation Plan is divided into **7 phases**, each with clear objectives
 
 **Definition of Done:**
 - [x] `dotnet build` runs successfully
-- [ ] `dotnet test` runs successfully (empty tests pass)
-- [ ] CI pipeline runs green on GitHub Actions
+- [x] `dotnet test` runs successfully (28 tests pass)
+- [x] CI pipeline runs green on GitHub Actions
 
 ---
 
@@ -55,10 +55,10 @@ The Implementation Plan is divided into **7 phases**, each with clear objectives
 | 2.9 | Unit test SerialPortService | Mock SerialPort, test open/close/send, verify events fired | `AppLog.Tests/Services/SerialPortServiceTests.cs` |
 
 **Definition of Done:**
-- [ ] Open/Close port works
-- [ ] Send data via UART succeeds
-- [ ] Receive data from UART fires correct event
-- [ ] Unit tests pass
+- [x] Open/Close port works
+- [x] Send data via UART succeeds
+- [x] Receive data from UART fires correct event
+- [x] Unit tests pass (17 SerialPortService tests)
 
 ---
 
@@ -108,11 +108,11 @@ The Implementation Plan is divided into **7 phases**, each with clear objectives
 | 3.12 | 1MB buffer limit | Check `rtbLogDisplay.TextLength`, if > 1,048,576 chars → remove oldest lines (find first `\n`, remove up to that point) | `MainForm.cs` |
 
 **Definition of Done:**
-- [ ] UI displays correct layout
-- [ ] Open/Close port toggles UI state correctly
-- [ ] Log displays real-time with correct colors
-- [ ] Auto-scroll works
-- [ ] 1MB buffer limit works
+- [x] UI displays correct layout
+- [x] Open/Close port toggles UI state correctly
+- [x] Log displays real-time with correct colors
+- [x] Auto-scroll works
+- [x] 1MB buffer limit works
 
 ---
 
@@ -130,11 +130,11 @@ The Implementation Plan is divided into **7 phases**, each with clear objectives
 | 4.6 | Empty data check | Do not send if `txtSendData.Text` is empty | `MainForm.cs` |
 
 **Definition of Done:**
-- [ ] Send ASCII data via UART successfully
-- [ ] TX entry displays in log display
-- [ ] Enter key triggers send
-- [ ] Text is preserved after send
-- [ ] Disabled when port is closed
+- [x] Send ASCII data via UART successfully
+- [x] TX entry displays in log display
+- [x] Enter key triggers send
+- [x] Text is preserved after send
+- [x] Disabled when port is closed
 
 ---
 
@@ -169,11 +169,11 @@ Content:
 | 5.10 | Unit test LogFileService | Test start/stop/write, verify file content matches format, test concurrent writes | `AppLog.Tests/Services/LogFileServiceTests.cs` |
 
 **Definition of Done:**
-- [ ] Start/Stop logging toggle works correctly
-- [ ] Log file created with correct name format
-- [ ] File content has correct format
-- [ ] No data loss during continuous logging
-- [ ] Thread-safe write
+- [x] Start/Stop logging toggle works correctly
+- [x] Log file created with correct name format
+- [x] File content has correct format
+- [x] No data loss during continuous logging
+- [x] Thread-safe write
 
 ---
 
@@ -187,16 +187,16 @@ Content:
 | 6.2 | Error handling - File | Handle: folder creation failed, disk full, permission denied → show MessageBox | `LogFileService.cs`, `MainForm.cs` |
 | 6.3 | Status bar | Display: Connected/Disconnected state, port name, Logging state, log file name | `MainForm.Designer.cs` |
 | 6.4 | Form resize | Anchor/Dock controls for responsive resize, minimum size = 600x400 | `MainForm.Designer.cs` |
-| 6.5 | App icon | Add icon for application and form title bar | `Properties/Resources.resx` |
-| 6.6 | Form title | `this.Text = "AppLog v1.0.0"` | `MainForm.cs` |
-| 6.7 | Port disconnected handling | When USB unplugged → auto close port, enable UI, notify user | `SerialPortService.cs` |
+| 6.5 | App icon | Add icon for application and form title bar (pending: no icon file) | `Properties/Resources.resx` |
+| 6.6 | Form title | `this.Text = "AppLog v{version}"` | `MainForm.cs` |
+| 6.7 | Port disconnected handling | When USB unplugged → auto close port, enable UI, notify user | `MainForm.cs` |
 | 6.8 | Config persistence | Save last used port name to `Properties.Settings.Default` (optional) | `Properties/Settings.settings` |
 
 **Definition of Done:**
-- [ ] No crash in any edge case
-- [ ] User-friendly error messages
-- [ ] UI responsive on resize
-- [ ] Status bar displays correct state
+- [x] No crash in any edge case
+- [x] User-friendly error messages
+- [x] UI responsive on resize
+- [x] Status bar displays correct state
 
 ---
 
