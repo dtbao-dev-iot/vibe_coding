@@ -31,7 +31,7 @@
 | `docs/version-convention.md` | **Version Convention** - SemVer rules, version bump rules, pre-release, version in .csproj, git tag, branching strategy | Read when you need to **bump version** or decide MAJOR/MINOR/PATCH |
 | `docs/changelog-convention.md` | **Changelog Convention** - Changelog creation rules, change assessment to version bump, sections, real examples | Read when you need to **create changelog** for a new version or **assess commits** |
 | `docs/changelog-template.md` | **Changelog Template** - Template for each version changelog | Use when **creating a new CHANGELOG file** |
-| `docs/IMPLEMENTATION_PLAN.md` | **Implementation Plan** - Development roadmap by phases, milestone timeline | Read when you need to know **implementation order** or **development roadmap** |
+| `docs/implementation-plan.md` | **Implementation Plan** - Development roadmap by phases, milestone timeline | Read when you need to know **implementation order** or **development roadmap** |
 
 ---
 
@@ -132,6 +132,13 @@ dotnet format src/AppLog.sln
 - Format: `Log_DDMMYYYY_HHMM.log`
 - Location: `logs/` folder (relative to executable)
 - Thread-safe writing with `lock()` and `Flush()` after each write
+
+### Port Connection Monitor
+- Timer-based polling every 1 second when port is open
+- Detects unexpected disconnection (USB unplugged, device removed)
+- Checks if current port still exists in `SerialPort.GetPortNames()`
+- Auto-recovers: closes port, updates UI (button → "Open"), refreshes port list, notifies user
+- Also handles `ErrorOccurred` event for disconnection detection
 
 ### UI Controls
 | Control | Type | Function |

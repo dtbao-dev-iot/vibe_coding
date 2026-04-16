@@ -2,7 +2,7 @@
 
 > **Project:** AppLog - UART Serial Log Reader  
 > **Tech Stack:** C# .NET 8 WinForms  
-> **Last Updated:** 2026-04-15
+> **Last Updated:** 2026-04-16
 
 ---
 
@@ -189,7 +189,7 @@ Content:
 | 6.4 | Form resize | Anchor/Dock controls for responsive resize, minimum size = 600x400 | `MainForm.Designer.cs` |
 | 6.5 | App icon | Add icon for application and form title bar (pending: no icon file) | `Properties/Resources.resx` |
 | 6.6 | Form title | `this.Text = "AppLog v{version}"` | `MainForm.cs` |
-| 6.7 | Port disconnected handling | When USB unplugged → auto close port, enable UI, notify user | `MainForm.cs` |
+| 6.7 | Port disconnected handling | When USB unplugged → auto close port, enable UI, notify user. Timer-based polling (1s) checks port existence + `ErrorOccurred` event. Auto-switches button to "Open" | `MainForm.cs` |
 | 6.8 | Config persistence | Save last used port name to `Properties.Settings.Default` (optional) | `Properties/Settings.settings` |
 
 **Definition of Done:**
@@ -214,8 +214,8 @@ Content:
 | 7.6 | Smoke test release | Download artifact from GitHub Release, run on clean machine, verify functionality | - |
 
 **Definition of Done:**
-- [ ] All phases 1-6 completed
-- [ ] Version tag created and pushed
+- [x] All phases 1-6 completed
+- [x] Version tag created and pushed
 - [ ] GitHub Release published with artifact
 - [ ] Smoke test passes
 

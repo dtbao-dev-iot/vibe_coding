@@ -22,6 +22,12 @@ public partial class MainForm : Form
     private readonly LogFileService _logFileService;
 
     /// <summary>
+    /// Timer to periodically check if the serial port is still connected.
+    /// Polls every 1 second when port is open.
+    /// </summary>
+    private readonly System.Windows.Forms.Timer _portCheckTimer;
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="MainForm"/> class.
     /// Sets up services, event handlers, and initial UI state.
     /// </summary>
@@ -42,6 +48,13 @@ public partial class MainForm : Form
 
         // Load initial port list
         RefreshPortList();
+
+        // Initialize port connection check timer
+        _portCheckTimer = new System.Windows.Forms.Timer
+        {
+            Interval = 1000 // Check every 1 second
+        };
+        _portCheckTimer.Tick += PortCheckTimer_Tick;
 
         // Set initial UI state
         UpdateUIState(isPortOpen: false);
@@ -122,6 +135,7 @@ public partial class MainForm : Form
             _serialPortService.OpenPort(portName, baudRate);
             UpdateUIState(isPortOpen: true);
             UpdateStatusBar();
+            _portCheckTimer.Start();
         }
         catch (Exception ex)
         {
@@ -161,6 +175,7 @@ public partial class MainForm : Form
 
         UpdateUIState(isPortOpen: false);
         UpdateStatusBar();
+        _portCheckTimer.Stop();
     }
 
     // =========================================================================
@@ -281,6 +296,31 @@ public partial class MainForm : Form
 
         UpdateLogButtonState();
         UpdateStatusBar();
+    }
+
+    // =========================================================================
+    // Port Connection Monitor
+    // =========================================================================
+
+    /// <summary>
+    /// Handles the port check timer tick.
+    /// Detects if the serial port has been disconnected (e.g., USB unplugged).
+    /// </summary>
+    private void PortCheckTimer_Tick(object? sender, EventArgs e)
+    {
+        if (!_serialPortService.IsOpen)
+        {
+            return;
+        }
+
+        // Check if the port still exists in the system's available ports
+        string currentPort = _serialPortService.PortName;
+        string[] availablePorts = SerialPortService.GetAvailablePorts();
+
+        if (!availablePorts.Contains(currentPort))
+        {
+            HandlePortDisconnected();
+        }
     }
 
     // =========================================================================
@@ -422,6 +462,8 @@ public partial class MainForm : Form
     /// <param name="e">The event arguments.</param>
     private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
     {
+        _portCheckTimer.Stop();
+        _portCheckTimer.Dispose();
         _serialPortService.Dispose();
         _logFileService.Dispose();
     }
